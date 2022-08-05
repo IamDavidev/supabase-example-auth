@@ -1,3 +1,4 @@
+kear;
 import { createClient } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import './App.css';
@@ -10,12 +11,36 @@ async function signInWithGoogle() {
   const { user, session, error } = await client.auth.signIn({
     provider: 'google',
   });
-  console.log('🚀 ~ file: App.jsx ~ line 14 ~ signInWithGoogle ~ user', user);
-  console.log(
-    '🚀 ~ file: App.jsx ~ line 14 ~ signInWithGoogle ~ session',
-    session
+}
+
+export async function signInWithGithub() {
+  const { user, error, session } = await client.auth.signIn({
+    provider: 'github',
+  });
+}
+
+export async function signInWithGmailAndPassword() {
+  const { user, session, error } = await client.auth.signUp(
+    {
+      email: 'yjejuvfqfvmiegilka@nthrw.com',
+      password: 'example-password',
+    },
+    {
+      data: {
+        name: 'profile name',
+        banner: 'url.com',
+        bio: "I'm a bio",
+      },
+    }
   );
-  console.log('🚀 ~ file: App.jsx ~ line 14 ~ signInWithGoogle ~ error', error);
+}
+
+async function singInWithEmail() {
+  const userAuth = await client.auth.signIn({
+    email: 'yjejuvfqfvmiegilka@nthrw.com',
+    password: 'example-password',
+  });
+  return userAuth;
 }
 
 export function getCurrentUser() {
@@ -30,7 +55,6 @@ export async function getUser({ token }) {
 
 function App() {
   const [user, setUser] = useState();
-  console.log('🚀 ~ file: App.jsx ~ line 28 ~ App ~ user', user);
 
   useEffect(() => {
     client.auth.onAuthStateChange((event, session) => {
@@ -45,6 +69,18 @@ function App() {
           signInWithGoogle();
         }}>
         Sign in with Google
+      </button>
+      <button
+        onClick={() => {
+          signInWithGmailAndPassword();
+        }}>
+        Sign in with Gmail And Password
+      </button>
+      <button
+        onClick={() => {
+          singInWithEmail();
+        }}>
+        sign in
       </button>
     </div>
   );
